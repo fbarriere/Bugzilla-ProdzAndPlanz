@@ -65,7 +65,9 @@ sub page_before_template {
     	else {
     		$tested = $product->description;
     	}
-    	$product_filter = qr/$product_filter/;
+    	
+    	$product_filter = ($product_filter) ? qr/$product_filter/ : qr/.*/;
+    	
     	if("$tested" =~ $product_filter) {
     		my $p = {
     			'product'    => $product,
