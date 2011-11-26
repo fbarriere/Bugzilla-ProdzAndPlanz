@@ -1,0 +1,68 @@
+[%# The contents of this file are subject to the Mozilla Public
+  # License Version 1.1 (the "License"); you may not use this file
+  # except in compliance with the License. You may obtain a copy of
+  # the License at http://www.mozilla.org/MPL/
+  #
+  # Software distributed under the License is distributed on an "AS
+  # IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  # implied. See the License for the specific language governing
+  # rights and limitations under the License.
+  #
+  # The Original Code is the Bugzilla Bug Tracking System.
+  #
+  # The Initial Developer of the Original Code is Netscape Communications
+  # Corporation. Portions created by Netscape are
+  # Copyright (C) 1998 Netscape Communications Corporation. All
+  # Rights Reserved.
+  #
+  # Contributor(s): 
+  #%]
+
+[% PROCESS global/variables.none.tmpl %]
+
+[% PROCESS global/header.html.tmpl
+           title = "products list"
+           subheader = subheader
+ %]
+
+<h2>Looking for products ([% filter_type %]) matching: [% product_filter %] </h2>
+
+<table class="product_listing" width="100%">
+	<tr>
+		<th>Product name (classification)</th>
+		<th>Product description</th>
+		<th colspan=2>Action</th>
+	</tr>
+
+  [% FOREACH p = products %]
+    <tr>
+      <td class="product_name">
+        [% p.product.name %] ([% p.product.classification.name %])
+      </td>
+      <td class="product_description">
+      	[% p.product.description %]
+      </td>
+      <td class="product_action">
+      	<a href="enter_bug.cgi?product=[% p.product.name %]">[Enter new bug]</a>
+      </td>
+      <td class="product_action">
+      	<a href="buglist.cgi?product=[% p.product.name %]&bug_status=__open__">[See open bugs]</a>
+      </td>
+    </tr>
+    <tr>
+    	<td class="version_listing" colspan=4>
+    		Versions:
+    		[% FOREACH v = p.versions %]
+				- <a class="past_versions" href="buglist.cgi?product=[% p.product.name %]&version=[% v.name %]">[% v.name %]</a>
+    		[% END %]
+    		| 
+    		[% FOREACH m = p.milestones %]
+    			- <a class="futur_versions" href="buglist.cgi?product=[% p.product.name %]&target_milestone=[% m.name %]">[% m.name %]</a>
+    		[% END %]
+    	</td>
+    </tr>
+  [% END %]
+
+</table>
+
+[% PROCESS global/footer.html.tmpl %]
