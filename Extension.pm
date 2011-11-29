@@ -38,7 +38,43 @@ sub install_update_db {
 #
 # Main logic to execute before the template:
 #
+#   Use page.cgi to display new pages.
+#   Select the corresponding processing function based on
+#   the selected page.
+#
 sub page_before_template {
+    my ($self, $args) = @_;
+
+	my $pageid = Bugzilla->cgi->param('id');
+	
+	if("$pageid" eq "manyproducts/search_result.html") {
+		product_search($self, $args);
+	}
+	elsif("$pageid" eq "manyproducts/product_planning.html") {
+		product_planning($self, $args);
+	}
+}
+
+sub product_planning {
+	my ($self, $args) = @_;
+	
+	my $user  = Bugzilla->login();
+    my $vars  = $args->{vars};
+    my $pname = Bugzilla->cgi->param('product');
+    
+    my $product = new Bugzilla::Product({ name => "$pname" });
+    
+    $vars->{'versions'} = [];
+    $vars->{'product'}  = $product;
+    
+    foreach my $version (_filter_milestones($product, "---")) {
+    	my $v = { 'version' => $version };
+    	$v->{'bugs'} = Bugzilla::Bug->match({'target_milestone' => $version->name});
+    	push(@{$vars->{'versions'}}, $v);
+    }    
+}
+
+sub product_search {
     my ($self, $args) = @_;
     my ($tested);
     

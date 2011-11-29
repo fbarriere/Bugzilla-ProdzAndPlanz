@@ -37,7 +37,7 @@
   [% FOREACH p = products %]
     <tr>
       <td class="product_name">
-        [% p.product.name %] ([% p.product.classification.name %])
+        <a href="page.cgi?id=manyproducts/product_planning.html&product=[% p.product.name %]">[% p.product.name %]</a> ([% p.product.classification.name %])
       </td>
       <td class="product_description">
       	[% p.product.description %]
