@@ -50,3 +50,7 @@ a.futur_versions {
 	text-decoration: none;
 }
 
+span.planning_closed {
+	text-decoration: line-through;
+}
+
