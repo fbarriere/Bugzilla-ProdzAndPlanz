@@ -10,7 +10,7 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 #
-# The Original Code is the ManyProducts Bugzilla Extension.
+# The Original Code is the ProdzAndPlanz Bugzilla Extension.
 #
 # The Initial Developer of the Original Code is YOUR NAME
 # Portions created by the Initial Developer are Copyright (C) 2011 the
@@ -19,7 +19,7 @@
 # Contributor(s):
 #   YOUR NAME <YOUR EMAIL ADDRESS>
 
-package Bugzilla::Extension::ManyProducts::Util;
+package Bugzilla::Extension::ProdzAndPlanz::Util;
 use strict;
 use base qw(Exporter);
 our @EXPORT = qw(
@@ -27,7 +27,7 @@ our @EXPORT = qw(
 );
 
 # This file can be loaded by your extension via 
-# "use Bugzilla::Extension::ManyProducts::Util". You can put functions
+# "use Bugzilla::Extension::ProdzAndPlanz::Util". You can put functions
 # used by your extension in here. (Make sure you also list them in
 # @EXPORT.)
 

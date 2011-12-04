@@ -10,7 +10,7 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 #
-# The Original Code is the ManyProducts Bugzilla Extension.
+# The Original Code is the ProdzAndPlanz Bugzilla Extension.
 #
 # The Initial Developer of the Original Code is YOUR NAME
 # Portions created by the Initial Developer are Copyright (C) 2011 the
@@ -19,12 +19,12 @@
 # Contributor(s):
 #   Francois Barriere <francois.barriere@atmel.com>
 
-package Bugzilla::Extension::ManyProducts;
+package Bugzilla::Extension::ProdzAndPlanz;
 use strict;
 use base qw(Bugzilla::Extension);
 
-# This code for this is in ./extensions/ManyProducts/lib/Util.pm
-use Bugzilla::Extension::ManyProducts::Util;
+# This code for this is in ./extensions/ProdzAndPlanz/lib/Util.pm
+use Bugzilla::Extension::ProzAndPlanz::Util;
 
 our $VERSION = '0.01';
 
@@ -47,10 +47,10 @@ sub page_before_template {
 
 	my $pageid = Bugzilla->cgi->param('id');
 	
-	if("$pageid" eq "manyproducts/search_result.html") {
+	if("$pageid" eq "prodzandplanz/search_result.html") {
 		product_search($self, $args);
 	}
-	elsif("$pageid" eq "manyproducts/product_planning.html") {
+	elsif("$pageid" eq "prodzandplanz/product_planning.html") {
 		product_planning($self, $args);
 	}
 }

@@ -10,7 +10,7 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 #
-# The Original Code is the ManyProducts Bugzilla Extension.
+# The Original Code is the ProdzAndPlanz Bugzilla Extension.
 #
 # The Initial Developer of the Original Code is YOUR NAME
 # Portions created by the Initial Developer are Copyright (C) 2011 the
@@ -19,10 +19,10 @@
 # Contributor(s):
 #   Francois Barriere <francois.barriere@atmel.com>
 
-package Bugzilla::Extension::ManyProducts;
+package Bugzilla::Extension::ProdzAndPlanz;
 use strict;
 
-use constant NAME => 'ManyProducts';
+use constant NAME => 'ProdzAndPlanz';
 
 use constant REQUIRED_MODULES => [
 ];
