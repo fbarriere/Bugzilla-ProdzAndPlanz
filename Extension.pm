@@ -69,7 +69,10 @@ sub product_planning {
     
     foreach my $version (_filter_milestones($product, "---")) {
     	my $v = { 'version' => $version };
-    	$v->{'bugs'} = Bugzilla::Bug->match({'target_milestone' => $version->name});
+    	$v->{'bugs'} = Bugzilla::Bug->match({
+    		'target_milestone' => $version->name,
+    		'product'          => "$pname",
+    });
     	push(@{$vars->{'versions'}}, $v);
     }    
 }
