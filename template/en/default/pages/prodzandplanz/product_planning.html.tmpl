@@ -29,8 +29,33 @@
 
 [% FOREACH v = versions %]
 	<h3>[% v.version.name %]</h3>
+	<div progress_plan">
+		<table class="progressbar">
+			<tr>
+				[% IF v.pc_done > 0 %]
+				<td class="progress_done" style="width: [% v.pc_done %]%"></td>
+				[% ELSE %]
+				<td class="progress_done" style="width: 1%"></td>
+				[% END %]
+				<td class="progress_todo"></td>
+			</tr>
+		</table>
+		[% v.pc_done %]% : [% v.num_closed %] (closed) +  [% v.num_opened %] (open) / [% v.num_total %] (total)
+	</div>
 	<ul>
-		[% FOREACH b = v.bugs %]
+		[% FOREACH b = v.closed %]
+			<li>
+				<a href="show_bug.cgi?id=[% b.id %]">[% b.id %]</a>: 
+				[% IF b.isopened %]
+					<span class="planning_open">
+				[% ELSE %]
+					<span class="planning_closed">
+				[% END %]
+				[% b.short_desc %]
+				</span>
+			</li>
+		[% END %]
+		[% FOREACH b = v.opened %]
 			<li>
 				<a href="show_bug.cgi?id=[% b.id %]">[% b.id %]</a>: 
 				[% IF b.isopened %]

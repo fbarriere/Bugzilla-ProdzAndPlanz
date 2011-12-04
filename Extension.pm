@@ -72,7 +72,26 @@ sub product_planning {
     	$v->{'bugs'} = Bugzilla::Bug->match({
     		'target_milestone' => $version->name,
     		'product'          => "$pname",
-    });
+    	});
+    	$v->{'opened'} = [];
+    	$v->{'closed'} = [];
+    	foreach my $bug (@{$v->{'bugs'}}) {
+    		if($bug->isopened) {
+    			push(@{$v->{'opened'}}, $bug);
+    		}
+    		else {
+    			push(@{$v->{'closed'}}, $bug);
+    		}
+    	}
+    	$v->{'num_opened'} = scalar(@{$v->{'opened'}});
+    	$v->{'num_closed'} = scalar(@{$v->{'closed'}});
+    	$v->{'num_total'}  = scalar(@{$v->{'opened'}}) + scalar(@{$v->{'closed'}});
+    	if($v->{'num_total'} > 0) {
+    		$v->{'pc_done'} = ($v->{'num_closed'} / $v->{'num_total'}) * 100;
+    	}
+    	else {
+    		$v->{'pc_done'} = 0;
+    	}
     	push(@{$vars->{'versions'}}, $v);
     }    
 }

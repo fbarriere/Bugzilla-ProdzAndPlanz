@@ -54,3 +54,17 @@ span.planning_closed {
 	text-decoration: line-through;
 }
 
+table.progressbar {
+	border: 0px solid black;
+	width: 50%;
+	height: 2em;
+}
+
+td.progress_done {
+	background-color: #009900;
+}
+
+td.progress_todo {
+	background-color: #FF6600;
+}
+
