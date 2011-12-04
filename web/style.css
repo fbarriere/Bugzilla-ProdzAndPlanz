@@ -56,7 +56,7 @@ span.planning_closed {
 
 table.progressbar {
 	border: 0px solid black;
-	width: 50%;
+	width: 20em;
 	height: 2em;
 }
 

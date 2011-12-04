@@ -1,0 +1,47 @@
+
+Description:
+===========
+
+   The goal of this extension is to add features for project
+planning and product management. The original need was a 
+product search in order to allow faster access to bugs lists
+and bugs filling in a Bugzilla with a potentially large number
+of products.
+
+This is a first extension, so it may contain many bugs and
+can be improved in many ways. Comments, remarks and fixes
+are welcome.
+
+Features:
+========
+
+   A new product search field is added to the bottom of the
+home page. Products can be searched on name or description
+(different buttons in the search form). Then the string is
+searched in the name or description. If the search string
+is empty, all the products are returned.
+
+The product search result is returned as a table with the
+products name and description, a link to create/report a new
+bug for this product, list the open bugs on the product.
+
+The list of versions and milestones are listed in the result.
+The milestones that also appear in the list of versions, are
+not listed. The default milestone and version names (unspecified
+and '---' are also filtered). 
+
+Each version and milestone name are links to the list of bugs
+attached to the named version or milestone.
+
+The product name is a link to a planning page. This page
+contains a the list of future versions (milestones) with the
+list of attached bugs and the percentage of closed bugs and
+a progress bar that highlights what has already been done.
+
+Install:
+=======
+
+   To install the extension, as usual, just extract the extension
+package (or checkout the extension) into the "extensions" folder
+of your Bugzilla installation.
+

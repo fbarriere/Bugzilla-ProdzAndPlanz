@@ -34,10 +34,10 @@
 			<tr>
 				[% IF v.pc_done > 0 %]
 				<td class="progress_done" style="width: [% v.pc_done %]%"></td>
-				[% ELSE %]
-				<td class="progress_done" style="width: 1%"></td>
 				[% END %]
+				[% IF v.pc_done < 100 %]
 				<td class="progress_todo"></td>
+				[% END %]
 			</tr>
 		</table>
 		[% v.pc_done %]% : [% v.num_closed %] (closed) +  [% v.num_opened %] (open) / [% v.num_total %] (total)
