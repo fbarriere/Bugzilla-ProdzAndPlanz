@@ -24,7 +24,7 @@ use strict;
 use base qw(Bugzilla::Extension);
 
 # This code for this is in ./extensions/ProdzAndPlanz/lib/Util.pm
-use Bugzilla::Extension::ProzAndPlanz::Util;
+use Bugzilla::Extension::ProdzAndPlanz::Util;
 
 our $VERSION = '0.01';
 
