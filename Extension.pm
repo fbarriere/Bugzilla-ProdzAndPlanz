@@ -17,7 +17,7 @@
 # Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
-#   Francois Barriere <francois.barriere@atmel.com>
+#   Francois Barriere <francois@barriere-smithson.net>
 
 package Bugzilla::Extension::ProdzAndPlanz;
 use strict;
@@ -38,9 +38,9 @@ sub install_update_db {
 #
 # Main logic to execute before the template:
 #
-#   Use page.cgi to display new pages.
-#   Select the corresponding processing function based on
-#   the selected page.
+#   As we add more than a single page, we select the
+# function to execute based on the URL of the page
+# requested.
 #
 sub page_before_template {
     my ($self, $args) = @_;
@@ -55,6 +55,15 @@ sub page_before_template {
 	}
 }
 
+#
+# Product planning:
+#
+#   Given a product name, list milestones for this product and
+# for each milestone list the bugs attached to the milestone.
+# Sort the bugs into two lists: the closed bugs and the open bugs.
+# Calculate the percentage done (closed / total), consider the
+# special case where the total is 0.
+# 
 sub product_planning {
 	my ($self, $args) = @_;
 	
@@ -96,6 +105,16 @@ sub product_planning {
     }    
 }
 
+#
+# Product search:
+#
+#   given a string, list all the products that contain
+# this string in their name or in their description (depending
+# on the button pressed on the previous form, saved in psubmit).
+# If the search string is empty, replace it with ".*" to match
+# all the products.
+# List the versions and milestones to complete the search page.
+#
 sub product_search {
     my ($self, $args) = @_;
     my ($tested);
@@ -137,6 +156,14 @@ sub product_search {
     }
 }
 
+#
+# Version filter:
+#
+#   given a product and the string given to the default
+# version ("unspecified" in fresh Bugzilla new install),
+# just re-create a list of version strings without the
+# default version name.
+#
 sub _filter_versions {
 	my ($product, $default) = @_;
 	
@@ -149,6 +176,18 @@ sub _filter_versions {
 	return @versions;
 }
 
+#
+# Milestone filter:
+#
+#   given a product and the string given to the default
+# milestone ("---" in fresh new install), re-create a list of
+# the product milestones without the default milestone name,
+# but also without the version names.
+# Considering milestones are future versions, and once released
+# they get added to the list of versions, so already released
+# (or past) milestones are those that also appear in the version
+# list.
+#
 sub _filter_milestones {
 	my ($product, $default) = @_;
 	

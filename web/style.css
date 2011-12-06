@@ -1,4 +1,7 @@
-
+/*
+ * Style of the product search enclosing div that appears
+ * at the bottom of the home page.
+ */
 div.product_searchbox {
 	width:         40em;
 	text-align:    center;
@@ -12,15 +15,19 @@ div.product_searchbox #product_filter {
 	width: 30em;
 }
 
+/*
+ * Product listing page: the table header line style.
+ */
 table.product_listing th {
 	background-color: #B0B0B0;
 }
 
-table.product_listing td.version_listing {
-	border-bottom: 1px dashed #B0B0B0;
-	background-color: #F0F0F0;
-}
-
+/*
+ * Product listing first line of each product that
+ * contains the product name and the links to the
+ * bugs list and bug creation. Darker bakground, no
+ * border.
+ */
 table.product_listing td.product_name {
 	font-weight: bold;
 	background-color: #E0E0E0;
@@ -40,30 +47,66 @@ table.product_listing td.product_action {
 	width: 15%;
 }
 
+/*
+ * Products table, the line that contains the versions
+ * and milestones listing. Grey lighter bakground with
+ * a bottom border (to separate from the next product
+ * description line).
+ */
+table.product_listing td.version_listing {
+	border-bottom: 1px dashed #B0B0B0;
+	background-color: #F0F0F0;
+}
+
+/*
+ * Versions (past or already released versions) color
+ * settings.
+ */
 a.past_versions {
 	color: #339900;
 	text-decoration: none;
 }
 
+/*
+ * Milestones (future or unreleased versions) color
+ * settings.
+ */
 a.futur_versions {
 	color: #FF9900;
 	text-decoration: none;
 }
 
+/*
+ * Planning page settings:
+ * The closed bug are marked by a strike-through line.
+ */
 span.planning_closed {
 	text-decoration: line-through;
 }
 
+/*
+ * The planning page progress bar is a table with two
+ * cells. The cell width is proportional and correspond
+ * to the percentage of closed bugs.
+ */
 table.progressbar {
 	border: 0px solid black;
 	width: 20em;
 	height: 2em;
 }
 
+/*
+ * The color of the progress bar part corresponding to
+ * the percentage of bugs already closed.
+ */
 td.progress_done {
 	background-color: #009900;
 }
 
+/*
+ * The color of the progress bar par corresponding to the
+ * percentage of bugs still open.
+ */
 td.progress_todo {
 	background-color: #FF6600;
 }

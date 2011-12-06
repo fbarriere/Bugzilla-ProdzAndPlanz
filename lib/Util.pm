@@ -17,7 +17,7 @@
 # Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
-#   Francois Barriere <francois.barriere@atmel.com>
+#   Francois Barriere <francois@barriere-smithson.net>
 
 package Bugzilla::Extension::ProdzAndPlanz::Util;
 use strict;
