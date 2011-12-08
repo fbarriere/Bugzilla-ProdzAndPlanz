@@ -26,10 +26,12 @@
            subheader = subheader
  %]
 
-<h2>Future releases of [% product.name %]:</h2>
+<h2>Product [% product.name %]:</h2>
+
+[% product.description %]
 
 [% FOREACH v = versions %]
-	<h3>[% v.version.name %]</h3>
+	<h3>Milestone [% v.version.name %]</h3>
 	<div progress_plan">
 		<table class="progressbar">
 			<tr>
