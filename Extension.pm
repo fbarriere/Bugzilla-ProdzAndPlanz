@@ -96,7 +96,9 @@ sub product_planning {
     	$v->{'num_closed'} = scalar(@{$v->{'closed'}});
     	$v->{'num_total'}  = scalar(@{$v->{'opened'}}) + scalar(@{$v->{'closed'}});
     	if($v->{'num_total'} > 0) {
-    		$v->{'pc_done'} = ($v->{'num_closed'} / $v->{'num_total'}) * 100;
+    		$v->{'pc_done'} = sprintf "%.0f", ($v->{'num_closed'} / $v->{'num_total'}) * 100;
+    		$v->{'pc_done'} = sprintf "%.0f", $v->{'pc_done'};
+    		
     	}
     	else {
     		$v->{'pc_done'} = 0;
