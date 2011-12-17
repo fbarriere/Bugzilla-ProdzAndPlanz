@@ -83,7 +83,7 @@ sub product_planning {
     $vars->{'versions'} = [];
     $vars->{'product'}  = $product;
     
-    foreach my $version (_filter_milestones($product, "---")) {
+    foreach my $version (PAP_filter_milestones($product, "---")) {
     	my $v = { 'version' => $version };
     	$v->{'bugs'} = Bugzilla::Bug->match({
     		'target_milestone' => $version->name,
@@ -157,59 +157,13 @@ sub product_search {
     	if("$tested" =~ $product_filter) {
     		my $p = {
     			'product'    => $product,
-    			'versions'   => [ _filter_versions($product, "unspecified") ],
-    			'milestones' => [ _filter_milestones($product, "---")],
+    			'versions'   => [ PAP_filter_versions($product, "unspecified") ],
+    			'milestones' => [ PAP_filter_milestones($product, "---")],
     		};
     		push(@{$vars->{'products'}}, $p);
     	}
     }
 }
 
-#
-# Version filter:
-#
-#   given a product and the string given to the default
-# version ("unspecified" in fresh Bugzilla new install),
-# just re-create a list of version strings without the
-# default version name.
-#
-sub _filter_versions {
-	my ($product, $default) = @_;
-	
-	my @versions = ();
-	
-	foreach my $version (@{$product->versions}) {
-		next if $version->name eq $default;
-		push(@versions, $version);
-	}
-	return @versions;
-}
-
-#
-# Milestone filter:
-#
-#   given a product and the string given to the default
-# milestone ("---" in fresh new install), re-create a list of
-# the product milestones without the default milestone name,
-# but also without the version names.
-# Considering milestones are future versions, and once released
-# they get added to the list of versions, so already released
-# (or past) milestones are those that also appear in the version
-# list.
-#
-sub _filter_milestones {
-	my ($product, $default) = @_;
-	
-	my @versions   = @{$product->versions};
-	my @milestones = ();
-	
-	foreach my $milestone (@{$product->milestones}) {
-		next if $milestone->name eq $default;
-		next if grep {$milestone->name eq $_->name} @versions;
-		push(@milestones, $milestone);
-	}
-	
-	return @milestones;
-}
 
 __PACKAGE__->NAME;

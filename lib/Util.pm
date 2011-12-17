@@ -23,12 +23,60 @@ package Bugzilla::Extension::ProdzAndPlanz::Util;
 use strict;
 use base qw(Exporter);
 our @EXPORT = qw(
-    
+    PAP_filter_versions
+    PAP_filter_milestones
 );
 
 # This file can be loaded by your extension via 
 # "use Bugzilla::Extension::ProdzAndPlanz::Util". You can put functions
 # used by your extension in here. (Make sure you also list them in
 # @EXPORT.)
+
+#
+# Version filter:
+#
+#   given a product and the string given to the default
+# version ("unspecified" in fresh Bugzilla new install),
+# just re-create a list of version strings without the
+# default version name.
+#
+sub PAP_filter_versions {
+	my ($product, $default) = @_;
+	
+	my @versions = ();
+	
+	foreach my $version (@{$product->versions}) {
+		next if $version->name eq $default;
+		push(@versions, $version);
+	}
+	return @versions;
+}
+
+#
+# Milestone filter:
+#
+#   given a product and the string given to the default
+# milestone ("---" in fresh new install), re-create a list of
+# the product milestones without the default milestone name,
+# but also without the version names.
+# Considering milestones are future versions, and once released
+# they get added to the list of versions, so already released
+# (or past) milestones are those that also appear in the version
+# list.
+#
+sub PAP_filter_milestones {
+	my ($product, $default, $max) = @_;
+	
+	my @versions   = @{$product->versions};
+	my @milestones = ();
+	
+	foreach my $milestone (@{$product->milestones}) {
+		next if $milestone->name eq $default;
+		next if grep {$milestone->name eq $_->name} @versions;
+		push(@milestones, $milestone);
+	}
+	
+	return @milestones;
+}
 
 1;
