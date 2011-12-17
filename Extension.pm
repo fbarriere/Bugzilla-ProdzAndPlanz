@@ -35,6 +35,13 @@ sub install_update_db {
 
 }
 
+sub config_add_panels {
+    my ($self, $args) = @_;
+    
+    my $modules = $args->{panel_modules};
+    $modules->{ProdzAndPlanz} = "Bugzilla::Extension::ProdzAndPlanz::Config";
+}
+
 #
 # Main logic to execute before the template:
 #
