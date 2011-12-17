@@ -77,13 +77,14 @@ sub product_planning {
 	my $user  = Bugzilla->login();
     my $vars  = $args->{vars};
     my $pname = Bugzilla->cgi->param('product');
+    my $max   = Bugzilla->params->{'max_milestones_in_plan'};
     
     my $product = new Bugzilla::Product({ name => "$pname" });
     
     $vars->{'versions'} = [];
     $vars->{'product'}  = $product;
     
-    foreach my $version (PAP_filter_milestones($product, "---")) {
+    foreach my $version (PAP_filter_milestones($product, "---", $max)) {
     	my $v = { 'version' => $version };
     	$v->{'bugs'} = Bugzilla::Bug->match({
     		'target_milestone' => $version->name,

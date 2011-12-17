@@ -35,6 +35,12 @@ sub get_param_list {
         	choices => ['off', 'header', 'footer'],
         	default => 'footer',
     	},
+    	{
+    		name    => 'max_milestones_in_plan',
+    		type    => 't',
+    		default => '0',
+    		checker => \&check_numeric,
+    	},
     );
     return @param_list;
 }

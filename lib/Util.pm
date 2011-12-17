@@ -76,7 +76,8 @@ sub PAP_filter_milestones {
 		push(@milestones, $milestone);
 	}
 	
-	return @milestones;
+	@milestones = sort {$a->name cmp $b->name} @milestones;
+	return ($max) ? @milestones[0 .. $max -1] : @milestones;
 }
 
 1;
