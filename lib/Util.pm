@@ -81,7 +81,7 @@ sub PAP_filter_milestones {
 		@milestones = sort {$a->name cmp $b->name} @milestones;
 	}
 	else {
-		@milestones = sort {$a->sortkey cmp $b->sortkey} @milestones;
+		@milestones = sort {$a->sortkey <=> $b->sortkey} @milestones;
 	}
 	
 	return ($max) ? @milestones[0 .. $max -1] : @milestones;
