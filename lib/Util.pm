@@ -69,6 +69,7 @@ sub PAP_filter_milestones {
 	
 	my @versions   = @{$product->versions};
 	my @milestones = ();
+	my $sortkey    = Bugzilla->params->{'milestones_sort'};
 	
 	foreach my $milestone (@{$product->milestones}) {
 		next if $milestone->name eq $default;
@@ -76,7 +77,13 @@ sub PAP_filter_milestones {
 		push(@milestones, $milestone);
 	}
 	
-	@milestones = sort {$a->name cmp $b->name} @milestones;
+	if($sortkey eq 'name') {
+		@milestones = sort {$a->name cmp $b->name} @milestones;
+	}
+	else {
+		@milestones = sort {$a->sortkey cmp $b->sortkey} @milestones;
+	}
+	
 	return ($max) ? @milestones[0 .. $max -1] : @milestones;
 }
 

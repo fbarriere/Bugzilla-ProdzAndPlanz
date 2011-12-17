@@ -41,6 +41,12 @@ sub get_param_list {
     		default => '0',
     		checker => \&check_numeric,
     	},
+    	{
+    		name    => 'milestones_sort',
+    		type    => 's',
+        	choices => ['sortkey', 'name'],
+    		default => 'sortkey',
+    	},
     );
     return @param_list;
 }
