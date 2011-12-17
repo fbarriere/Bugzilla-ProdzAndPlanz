@@ -23,6 +23,8 @@ package Bugzilla::Extension::ProdzAndPlanz;
 use strict;
 use base qw(Bugzilla::Extension);
 
+use Bugzilla::Constants;
+
 # This code for this is in ./extensions/ProdzAndPlanz/lib/Util.pm
 use Bugzilla::Extension::ProdzAndPlanz::Util;
 
@@ -51,6 +53,10 @@ sub config_add_panels {
 #
 sub page_before_template {
     my ($self, $args) = @_;
+
+	unless(Bugzilla->params->{'public_planning'}) {
+		Bugzilla->login(LOGIN_REQUIRED);
+	}
 
 	my $pageid = Bugzilla->cgi->param('id');
 	

@@ -47,6 +47,11 @@ sub get_param_list {
         	choices => ['sortkey', 'name'],
     		default => 'sortkey',
     	},
+    	{
+    		name    => 'public_planning',
+    		type    => 'b',
+    		default => '0',
+    	},
     );
     return @param_list;
 }
