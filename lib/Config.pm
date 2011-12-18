@@ -52,6 +52,16 @@ sub get_param_list {
     		type    => 'b',
     		default => '0',
     	},
+    	{
+    		name    => 'default_milestone',
+    		type    => 't',
+    		default => '---',
+    	},
+    	{
+    		name    => 'default_version',
+    		type    => 't',
+    		default => 'unspecified',
+    	},
     );
     return @param_list;
 }

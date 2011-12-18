@@ -84,13 +84,14 @@ sub product_planning {
     my $vars  = $args->{vars};
     my $pname = Bugzilla->cgi->param('product');
     my $max   = Bugzilla->params->{'max_milestones_in_plan'};
+    my $defm  = Bugzilla->params->{'default_milestone'};
     
     my $product = new Bugzilla::Product({ name => "$pname" });
     
     $vars->{'versions'} = [];
     $vars->{'product'}  = $product;
     
-    foreach my $version (PAP_filter_milestones($product, "---", $max)) {
+    foreach my $version (PAP_filter_milestones($product, "$defm", $max)) {
     	my $v = { 'version' => $version };
     	$v->{'bugs'} = Bugzilla::Bug->match({
     		'target_milestone' => $version->name,
@@ -139,6 +140,8 @@ sub product_search {
     my $vars           = $args->{vars};
     my $product_filter = Bugzilla->cgi->param('product_filter');
     my $filter_type    = Bugzilla->cgi->param('psubmit');
+    my $defv           = Bugzilla->params->{'default_version'};
+    my $defm           = Bugzilla->params->{'default_milestone'};
 	
 	$vars->{'product_filter'}  = "$product_filter";
 	$vars->{'products'}        = [];
@@ -164,8 +167,8 @@ sub product_search {
     	if("$tested" =~ $product_filter) {
     		my $p = {
     			'product'    => $product,
-    			'versions'   => [ PAP_filter_versions($product, "unspecified") ],
-    			'milestones' => [ PAP_filter_milestones($product, "---")],
+    			'versions'   => [ PAP_filter_versions($product, "$defv") ],
+    			'milestones' => [ PAP_filter_milestones($product, "$defm")],
     		};
     		push(@{$vars->{'products'}}, $p);
     	}
