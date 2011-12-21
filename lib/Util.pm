@@ -23,8 +23,9 @@ package Bugzilla::Extension::ProdzAndPlanz::Util;
 use strict;
 use base qw(Exporter);
 our @EXPORT = qw(
-    PAP_filter_versions
-    PAP_filter_milestones
+    PAP_filter_list
+    PAP_sort_milestones
+    PAP_limit_list
 );
 
 # This file can be loaded by your extension via 
@@ -33,58 +34,46 @@ our @EXPORT = qw(
 # @EXPORT.)
 
 #
-# Version filter:
+# Filter a list of object given a list of names
+# to exclude. Used to filter the list of milestones
+# or versions.
 #
-#   given a product and the string given to the default
-# version ("unspecified" in fresh Bugzilla new install),
-# just re-create a list of version strings without the
-# default version name.
-#
-sub PAP_filter_versions {
-	my ($product, $default) = @_;
+sub PAP_filter_list {
+	my ($sourcelist, $excludes) = @_;
 	
-	my @versions = ();
-	
-	foreach my $version (@{$product->versions}) {
-		next if $version->name eq $default;
-		push(@versions, $version);
+	my @excludes = @{$excludes};
+	my @outlist = ();
+	foreach my $elmt (@{$sourcelist}) {
+		next if grep {$elmt->name eq $_} @excludes;
+		push(@outlist, $elmt);
 	}
-	return @versions;
+	return @outlist;
 }
 
 #
-# Milestone filter:
+# Sort a list of milestone objects. Depending on the
+# configuration, sort on 'sortkey' or 'name' attribute.
 #
-#   given a product and the string given to the default
-# milestone ("---" in fresh new install), re-create a list of
-# the product milestones without the default milestone name,
-# but also without the version names.
-# Considering milestones are future versions, and once released
-# they get added to the list of versions, so already released
-# (or past) milestones are those that also appear in the version
-# list.
-#
-sub PAP_filter_milestones {
-	my ($product, $default, $max) = @_;
-	
-	my @versions   = @{$product->versions};
-	my @milestones = ();
-	my $sortkey    = Bugzilla->params->{'milestones_sort'};
-	
-	foreach my $milestone (@{$product->milestones}) {
-		next if $milestone->name eq $default;
-		next if grep {$milestone->name eq $_->name} @versions;
-		push(@milestones, $milestone);
-	}
+sub PAP_sort_milestones {
+	my $sortkey = Bugzilla->params->{'milestones_sort'};
 	
 	if($sortkey eq 'name') {
-		@milestones = sort {$a->name cmp $b->name} @milestones;
+		return sort {$a->name cmp $b->name} @_;
 	}
 	else {
-		@milestones = sort {$a->sortkey <=> $b->sortkey} @milestones;
+		return sort {$a->sortkey <=> $b->sortkey} @_;
 	}
+}
+
+#
+# Limit a list of values. The limit value is the
+# first argument, the rest is the list.
+# If the limit is null, return the complete list.
+#
+sub PAP_limit_list {
+	my $max = shift;
 	
-	return ($max) ? @milestones[0 .. $max -1] : @milestones;
+	return ($max) ? @_[0 .. $max -1] : @_;
 }
 
 1;

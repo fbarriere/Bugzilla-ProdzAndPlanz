@@ -83,15 +83,26 @@ sub product_planning {
 	my $user  = Bugzilla->login();
     my $vars  = $args->{vars};
     my $pname = Bugzilla->cgi->param('product');
-    my $max   = Bugzilla->params->{'max_milestones_in_plan'};
-    my $defm  = Bugzilla->params->{'default_milestone'};
     
     my $product = new Bugzilla::Product({ name => "$pname" });
     
     $vars->{'versions'} = [];
     $vars->{'product'}  = $product;
     
-    foreach my $version (PAP_filter_milestones($product, "$defm", $max)) {
+    my @milestones = PAP_filter_list(
+		$product->milestones,
+		[
+			Bugzilla->params->{'default_milestone'},
+			map {$_->name} @{$product->versions},
+		],
+	);
+	@milestones = PAP_sort_milestones(@milestones);
+	@milestones = PAP_limit_list(
+		Bugzilla->params->{'max_milestones_in_plan'}, 
+		@milestones
+	);
+    
+    foreach my $version (@milestones) {
     	my $v = { 'version' => $version };
     	$v->{'bugs'} = Bugzilla::Bug->match({
     		'target_milestone' => $version->name,
@@ -140,8 +151,6 @@ sub product_search {
     my $vars           = $args->{vars};
     my $product_filter = Bugzilla->cgi->param('product_filter');
     my $filter_type    = Bugzilla->cgi->param('psubmit');
-    my $defv           = Bugzilla->params->{'default_version'};
-    my $defm           = Bugzilla->params->{'default_milestone'};
 	
 	$vars->{'product_filter'}  = "$product_filter";
 	$vars->{'products'}        = [];
@@ -167,8 +176,23 @@ sub product_search {
     	if("$tested" =~ $product_filter) {
     		my $p = {
     			'product'    => $product,
-    			'versions'   => [ PAP_filter_versions($product, "$defv") ],
-    			'milestones' => [ PAP_filter_milestones($product, "$defm")],
+    			'versions'   => [ 
+    				PAP_filter_list(
+    					$product->versions,
+    					[ Bugzilla->params->{'default_version'} ]
+    				)
+				],
+    			'milestones' => [ 
+    				PAP_sort_milestones(
+    					PAP_filter_list(
+    						$product->milestones,
+    						[
+								Bugzilla->params->{'default_milestone'},
+								map {$_->name} @{$product->versions},
+							],
+    					)
+					)
+    			],
     		};
     		push(@{$vars->{'products'}}, $p);
     	}
