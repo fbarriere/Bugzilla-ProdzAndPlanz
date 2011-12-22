@@ -63,9 +63,43 @@ sub page_before_template {
 	if("$pageid" eq "prodzandplanz/search_result.html") {
 		product_search($self, $args);
 	}
+	elsif("$pageid" eq "prodzandplanz/product_page.html") {
+		product_page($self, $args);
+	}
 	elsif("$pageid" eq "prodzandplanz/product_planning.html") {
 		product_planning($self, $args);
 	}
+}
+
+#
+# Product page:
+#
+#   A summary page with the product name, its description,
+# the list of (past) versions with links to their bugs lists,
+# the list of (future) milestones with links to their bugs/fixes
+# lists, and links to the history (versions list)and planning 
+# (milestones list) pages.
+#
+sub product_page {
+	my ($self, $args) = @_;
+	
+    my $vars    = $args->{vars};
+    my $pname   = Bugzilla->cgi->param('product');
+    my $product = new Bugzilla::Product({ name => "$pname" });
+    
+    $vars->{'product'} = $product;
+    $vars->{'versions'} = [
+    	PAP_filter_list(
+    		$product->versions, 
+    		[ Bugzilla->params->{'default_version'} ]
+    	)
+    ];
+    $vars->{'milestones'} = [
+    	PAP_filter_list(
+    		$product->milestones, 
+    		[ Bugzilla->params->{'default_milestone'} ]
+    	)
+    ];
 }
 
 #
@@ -80,7 +114,6 @@ sub page_before_template {
 sub product_planning {
 	my ($self, $args) = @_;
 	
-	my $user  = Bugzilla->login();
     my $vars  = $args->{vars};
     my $pname = Bugzilla->cgi->param('product');
     
