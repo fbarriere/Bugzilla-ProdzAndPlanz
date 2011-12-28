@@ -69,6 +69,9 @@ sub page_before_template {
 	elsif("$pageid" eq "prodzandplanz/product_planning.html") {
 		product_planning($self, $args);
 	}
+	elsif("$pageid" eq "prodzandplanz/product_versions.html") {
+		product_versions($self, $args);
+	}
 }
 
 #
@@ -161,6 +164,55 @@ sub product_planning {
     	}
     	else {
     		$v->{'pc_done'} = 0;
+    	}
+    	push(@{$vars->{'versions'}}, $v);
+    }    
+}
+
+#
+# Product versions:
+#
+#   Given a product name, list versions for this product and
+# for each version list the bugs attached to the version.
+# Sort the bugs into two lists: the closed bugs and the open bugs.
+# 
+sub product_versions {
+	my ($self, $args) = @_;
+	
+    my $vars  = $args->{vars};
+    my $pname = Bugzilla->cgi->param('product');
+    
+    my $product = new Bugzilla::Product({ name => "$pname" });
+    
+    $vars->{'versions'} = [];
+    $vars->{'product'}  = $product;
+    
+    my @versions = PAP_filter_list(
+		$product->versions,
+		[
+			Bugzilla->params->{'default_version'},
+		],
+	);
+	@versions = PAP_limit_list(
+		Bugzilla->params->{'max_versions_in_plan'}, 
+		reverse @versions
+	);
+    
+    foreach my $version (@versions) {
+    	my $v = { 'version' => $version };
+    	$v->{'bugs'} = Bugzilla::Bug->match({
+    		'version' => $version->name,
+    		'product' => "$pname",
+    	});
+    	$v->{'opened'} = [];
+    	$v->{'closed'} = [];
+    	foreach my $bug (@{$v->{'bugs'}}) {
+    		if($bug->isopened) {
+    			push(@{$v->{'opened'}}, $bug);
+    		}
+    		else {
+    			push(@{$v->{'closed'}}, $bug);
+    		}
     	}
     	push(@{$vars->{'versions'}}, $v);
     }    

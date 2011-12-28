@@ -42,6 +42,12 @@ sub get_param_list {
     		checker => \&check_numeric,
     	},
     	{
+    		name    => 'max_versions_in_plan',
+    		type    => 't',
+    		default => '0',
+    		checker => \&check_numeric,
+    	},
+    	{
     		name    => 'milestones_sort',
     		type    => 's',
         	choices => ['sortkey', 'name'],
