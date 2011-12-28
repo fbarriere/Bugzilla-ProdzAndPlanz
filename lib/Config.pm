@@ -42,7 +42,19 @@ sub get_param_list {
     		checker => \&check_numeric,
     	},
     	{
+    		name    => 'max_milestones_in_search',
+    		type    => 't',
+    		default => '0',
+    		checker => \&check_numeric,
+    	},
+    	{
     		name    => 'max_versions_in_plan',
+    		type    => 't',
+    		default => '0',
+    		checker => \&check_numeric,
+    	},
+    	{
+    		name    => 'max_versions_in_search',
     		type    => 't',
     		default => '0',
     		checker => \&check_numeric,

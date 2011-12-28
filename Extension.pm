@@ -262,20 +262,27 @@ sub product_search {
     		my $p = {
     			'product'    => $product,
     			'versions'   => [ 
-    				PAP_filter_list(
-    					$product->versions,
-    					[ Bugzilla->params->{'default_version'} ]
+    				reverse 
+    				PAP_limit_list(
+    					Bugzilla->params->{'max_versions_in_search'},
+    					reverse PAP_filter_list(
+    						$product->versions,
+    						[ Bugzilla->params->{'default_version'} ],
+    					)
     				)
 				],
     			'milestones' => [ 
-    				PAP_sort_milestones(
-    					PAP_filter_list(
-    						$product->milestones,
-    						[
-								Bugzilla->params->{'default_milestone'},
-								map {$_->name} @{$product->versions},
-							],
-    					)
+    				PAP_limit_list(
+    					Bugzilla->params->{'max_milestones_in_search'},
+    					PAP_sort_milestones(
+    						PAP_filter_list(
+    							$product->milestones,
+    							[
+									Bugzilla->params->{'default_milestone'},
+									map {$_->name} @{$product->versions},
+								],
+    						)
+						)
 					)
     			],
     		};
