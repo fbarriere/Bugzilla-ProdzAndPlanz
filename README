@@ -8,9 +8,24 @@ product search in order to allow faster access to bugs lists
 and bugs filling in a Bugzilla with a potentially large number
 of products.
 
+Then came requests/ideas regarding the presentation of the
+informations attached to products. The idea is to offer a more
+product-centric view (because the default view in Bugzilla, is
+bug-centric).
+
+Limits and bugs:
+===============
+
 This is a first extension, so it may contain many bugs and
 can be improved in many ways. Comments, remarks and fixes
 are welcome.
+
+It has been tested on a small database, for the moment, so
+there may be performance issues with large installs.
+The versions and milestone pages can be impacted by the number
+of bugs in your database, most other pages are just "presentation"
+pages that present the information in another way and do not
+search for bugs...
 
 Features:
 ========
@@ -33,10 +48,20 @@ and '---' are also filtered).
 Each version and milestone name are links to the list of bugs
 attached to the named version or milestone.
 
-The product name is a link to a planning page. This page
-contains a the list of future versions (milestones) with the
-list of attached bugs and the percentage of closed bugs and
-a progress bar that highlights what has already been done.
+The product name is a link to a product description page.
+This page contains the name and description of the product,
+the list of components (with their default assignee), the complete
+list of versions and milestones and links to a versions page
+and a milestones (or planning) page.
+
+The versions page contains the list of versions (max number
+controlled by a parameter), with the list of bugs attached to
+each version.
+
+The milestones (or planning) page contains a the list of milestones 
+(future versions) with the list of attached bugs and the percentage 
+of closed bugs and a progress bar that highlights what has already 
+been done.
 
 Install:
 =======
