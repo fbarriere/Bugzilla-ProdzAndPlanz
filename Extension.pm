@@ -28,7 +28,7 @@ use Bugzilla::Constants;
 # This code for this is in ./extensions/ProdzAndPlanz/lib/Util.pm
 use Bugzilla::Extension::ProdzAndPlanz::Util;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 # See the documentation of Bugzilla::Hook ("perldoc Bugzilla::Hook" 
 # in the bugzilla directory) for a list of all available hooks.
