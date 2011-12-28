@@ -32,11 +32,20 @@
 
 <h3>Components</h3>
 
-<ul>
+<table class="product_listing">
+	<tr>
+		<th>Component name:</th>
+		<th>Component description:</th>
+		<th>Default assignee</th>
+	</tr>
 	[% FOREACH c = product.components %]
-	<li>[% c.description %] (<a href="mailto:[% c.default_assignee.email %]">[% c.default_assignee.name %]</a>)</li>
+	<tr>
+		<td class="product_description">[% c.name %]</td>
+		<td class="product_description">[% c.description %]</td>
+		<td class="product_description"><a href="mailto:[% c.default_assignee.email %]">[% c.default_assignee.name %]</a></td>
+	</tr>
 	[% END %]
-</ul>
+</table>
 
 <h3>Versions</h3>
 [% FOREACH v = versions %]
