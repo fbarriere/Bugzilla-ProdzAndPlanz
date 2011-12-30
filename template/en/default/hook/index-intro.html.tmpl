@@ -20,12 +20,5 @@
   #%]
 
 [% IF Param('product_search_position') == 'header' %]
-<div class="product_searchbox">
-	<form id="product_search" name="product_search" action="page.cgi">
-		<input id="product_filter" type="text" name="product_filter">
-		<input type="submit" name="psubmit" value="Search product name">
-		<input type="submit" name="psubmit" value="Search product description">
-		<input id="id" type="hidden" name="id" value="prodzandplanz/search_result.html">
-	</form>
-</div>
+	[% INCLUDE pap_index.html.tmpl %]
 [% END %]

@@ -44,6 +44,16 @@ sub config_add_panels {
     $modules->{ProdzAndPlanz} = "Bugzilla::Extension::ProdzAndPlanz::Config";
 }
 
+sub template_before_process {
+	my $self = shift;
+		
+	foreach my $args (@_) {
+		if($args->{'file'} eq "index.html.tmpl") {
+			$self->product_list($args);
+		}
+	}
+}
+
 #
 # Main logic to execute before the template:
 #
@@ -291,5 +301,28 @@ sub product_search {
     }
 }
 
+sub product_list {
+    my ($self, $args) = @_;
+	
+	my $user     = Bugzilla->login();
+    my $vars     = $args->{vars};
+    my $llimit   = Bugzilla->params->{'index_list_columns'};
+    my @products = @{$user->get_enterable_products};
+    
+    my $productlist = {};
+    
+    foreach my $product (@products) {
+    	my $classification = $product->classification();
+    	if(exists $productlist->{$classification->name}) {
+    		push(@{$productlist->{$classification->name}->{'products'}}, $product);
+    	}
+    	else {
+    		$productlist->{$classification->name}->{'products'}       = [$product];
+    		$productlist->{$classification->name}->{'classification'} = $classification;
+    	}
+    }
+    
+    $vars->{'products_table'} = PAP_tableize($llimit, values %{$productlist});
+}
 
 __PACKAGE__->NAME;

@@ -26,6 +26,7 @@ our @EXPORT = qw(
     PAP_filter_list
     PAP_sort_milestones
     PAP_limit_list
+    PAP_tableize
 );
 
 # This file can be loaded by your extension via 
@@ -75,5 +76,32 @@ sub PAP_limit_list {
 	
 	return ($max) ? @_[0 .. $max -1] : @_;
 }
+
+#
+# Given a line size and an array, return a reference
+# to a table with the line size being the limit.
+# Used to format lists into tables for easier manipulation
+# in the templates.
+#
+sub PAP_tableize {
+	my $limit = shift;
+	
+	my $table = [];
+	my $line   = [];
+	
+	foreach my $elmt (@_) {
+		if(scalar(@{$line}) == $limit) {
+			push(@{$table}, $line);
+			$line = [$elmt];
+		}
+		else {
+			push(@{$line}, $elmt);
+		}
+	}
+	push(@{$table}, $line);
+	
+	return $table;
+}
+
 
 1;

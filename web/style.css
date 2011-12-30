@@ -3,7 +3,7 @@
  * at the bottom of the home page.
  */
 div.product_searchbox {
-	width:         40em;
+	width:         50em;
 	text-align:    center;
 	margin:        2em 0 2em 0;
 	padding:       2em;
@@ -11,15 +11,30 @@ div.product_searchbox {
 	outline-width: 1px;
 }
 
+table.classifications_table {
+	width: 50em;
+}
+
+table.classifications_table td {
+	padding: 1em;
+}
+
+select.product_select {
+	width: 100%;
+}
+
 div.product_searchbox #product_filter {
-	width: 30em;
+	width: 40em;
+	margin: 1em;
 }
 
 /*
  * Product listing page: the table header line style.
  */
-table.product_listing th {
+table.product_listing th, div.classification_title {
 	background-color: #B0B0B0;
+	padding: 0.5em;
+	margin: 0.2em;
 }
 
 /*

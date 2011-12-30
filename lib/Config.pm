@@ -80,6 +80,12 @@ sub get_param_list {
     		type    => 't',
     		default => 'unspecified',
     	},
+    	{
+    		name    => 'index_list_columns',
+    		type    => 't',
+    		default => '3',
+    		checker => \&check_numeric,
+    	},
     );
     return @param_list;
 }

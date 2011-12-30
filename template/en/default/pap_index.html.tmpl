@@ -1,0 +1,59 @@
+[%# The contents of this file are subject to the Mozilla Public
+  # License Version 1.1 (the "License"); you may not use this file
+  # except in compliance with the License. You may obtain a copy of
+  # the License at http://www.mozilla.org/MPL/
+  #
+  # Software distributed under the License is distributed on an "AS
+  # IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  # implied. See the License for the specific language governing
+  # rights and limitations under the License.
+  #
+  # The Original Code is the Bugzilla Bug Tracking System.
+  #
+  # The Initial Developer of the Original Code is Netscape Communications
+  # Corporation. Portions created by Netscape are
+  # Copyright (C) 1998 Netscape Communications Corporation. All
+  # Rights Reserved.
+  #
+  # Contributor(s): 
+  #   Francois Barriere <francois@barriere-smithson.net>
+  #%]
+
+<div class="product_searchbox">
+
+	<h3>This Bugzilla server features the following products:</h3>
+	
+	<table class="classifications_table">
+		[% FOREACH line IN products_table %]
+		<tr>
+			[% FOREACH el IN line %]
+			<td>
+				<div class="classification_title">[% el.classification.name %]</div>
+
+				<form name="[% el.classification.name %]" action="page.cgi">
+					<input id="id" type="hidden" name="id" value="prodzandplanz/product_page.html">
+					<select class="product_select" name="product" onchange='this.form.submit()'>
+						<option value=""></option>
+						[% FOREACH p IN el.products %]
+						<option value="[% p.name %]">[% p.name %]</option>
+						[% END %]
+					</select>
+				</form>
+
+			</td>
+			[% END %]
+		</tr>
+		[% END %]
+	</table>
+
+	<hr/>
+	
+	<form id="product_search" name="product_search" action="page.cgi">
+		<input id="product_filter" type="text" name="product_filter">
+		<br/>
+		<input type="submit" name="psubmit" value="Search product name">
+		<input type="submit" name="psubmit" value="Search product description">
+		<input id="id" type="hidden" name="id" value="prodzandplanz/search_result.html">
+	</form>
+	
+</div>
