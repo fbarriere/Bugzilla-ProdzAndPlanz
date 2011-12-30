@@ -30,6 +30,16 @@
 
 [% product.description %]
 
+<table class="product_actions">
+	<tr>
+		<td><a href="enter_bug.cgi?product=[% product.name %]">[Report new bug]</a></td>
+		<td><a href="buglist.cgi?product=[% product.name %]&bug_status=__open__">[List open bugs]</a></td>
+		<td><a href="buglist.cgi?product=[% product.name %]&bug_status=__closed__">[List closed bugs]</a></td>
+		<td><a href="buglist.cgi?product=[% product.name %]&bug_status=__all__">[List all bugs]</a></td>
+		<td><a href="buglist.cgi?product=[% product.name %]&target_milestone=[% Param('default_milestone') %]">[Bugs without milestone]</a></td>
+	</tr>
+</table>
+
 <h3>Components</h3>
 
 <table class="product_listing">

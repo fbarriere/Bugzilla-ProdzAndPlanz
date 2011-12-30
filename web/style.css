@@ -83,6 +83,17 @@ a.past_versions {
 }
 
 /*
+ * Product page: actions table style.
+ */
+
+table.product_actions {
+	width: 80%;
+	border: 1px solid black;
+	margin: 1em;
+	padding: 0.2em;
+}
+
+/*
  * Milestones (future or unreleased versions) color
  * settings.
  */
