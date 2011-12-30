@@ -57,15 +57,28 @@
 	[% END %]
 </table>
 
-<h3><a href="page.cgi?id=prodzandplanz/product_versions.html&product=[% product.name %]">Versions</a></h3>
+<h3>Versions</h3>
+<p>
+This product has defined the following versions (version names are 
+links to the list of attached bugs):
+<p>
 [% FOREACH v = versions %]
 	<a class="past_versions" href="buglist.cgi?product=[% product.name %]&version=[% v.name %]">[% v.name %]</a>, 
 [% END %]
+<p>
+The list of versions with the attached bugs can be seen 
+<a href="page.cgi?id=prodzandplanz/product_versions.html&product=[% product.name %]">here</a>.
 
-<h3><a href="page.cgi?id=prodzandplanz/product_planning.html&product=[% product.name %]">Milestones</a></h3>
+<h3>Milestones</h3>
+<p>
+This product has defined the following milestones (milestone names are 
+links to the list of attached bugs):
+<p>
 [% FOREACH m = milestones %]
 	<a class="futur_versions" href="buglist.cgi?product=[% product.name %]&target_milestone=[% m.name %]">[% m.name %]</a>, 
 [% END %]
-
+<p>
+The list of milestones with the attached bugs can be seen
+<a href="page.cgi?id=prodzandplanz/product_planning.html&product=[% product.name %]">here</a>.
 
 [% PROCESS global/footer.html.tmpl %]
