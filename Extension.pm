@@ -304,6 +304,10 @@ sub product_search {
 sub product_list {
     my ($self, $args) = @_;
 	
+	if(Bugzilla->params->{'product_search_position'} eq "off") {
+		return;
+	}
+	
 	my $user     = Bugzilla->login();
     my $vars     = $args->{vars};
     my $llimit   = Bugzilla->params->{'index_list_columns'};
