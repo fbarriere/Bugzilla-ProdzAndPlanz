@@ -240,9 +240,8 @@ sub product_versions {
 #
 sub product_search {
     my ($self, $args) = @_;
-    my ($tested);
+    my ($tested, $products);
     
-	my $user           = Bugzilla->login();
     my $vars           = $args->{vars};
     my $product_filter = Bugzilla->cgi->param('product_filter');
     my $filter_type    = Bugzilla->cgi->param('psubmit');
@@ -256,9 +255,15 @@ sub product_search {
  		$vars->{'filter_type'} = "description";
     }
     	
-    my @products = @{$user->get_enterable_products};
+	if(Bugzilla->params->{'public_planning'}) {
+    	$products = PAP_get_all_products();
+	}
+	else {
+		my $user = Bugzilla->login();
+		$products = $user->get_selectable_products();
+	}
     
-    foreach my $product (@products) {
+    foreach my $product (@{$products}) {
     	if("$filter_type" eq "Search product name") {
     		$tested = $product->name;
     	}
@@ -303,19 +308,26 @@ sub product_search {
 
 sub product_list {
     my ($self, $args) = @_;
+    my $products;
 	
 	if(Bugzilla->params->{'product_search_position'} eq "off") {
 		return;
 	}
 	
-	my $user     = Bugzilla->login();
     my $vars     = $args->{vars};
     my $llimit   = Bugzilla->params->{'index_list_columns'};
-    my @products = @{$user->get_enterable_products};
+
+	if(Bugzilla->params->{'public_planning'}) {
+    	$products = PAP_get_all_products();
+	}
+	else {
+		my $user = Bugzilla->login();
+		$products = $user->get_selectable_products();
+	}
     
     my $productlist = {};
     
-    foreach my $product (@products) {
+    foreach my $product (@{$products}) {
     	my $classification = $product->classification();
     	if(exists $productlist->{$classification->name}) {
     		push(@{$productlist->{$classification->name}->{'products'}}, $product);

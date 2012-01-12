@@ -27,6 +27,7 @@ our @EXPORT = qw(
     PAP_sort_milestones
     PAP_limit_list
     PAP_tableize
+    PAP_get_all_products
 );
 
 # This file can be loaded by your extension via 
@@ -103,5 +104,20 @@ sub PAP_tableize {
 	return $table;
 }
 
+sub PAP_get_all_products {
+	my $class_id = shift;
+
+	my $query = "SELECT id  FROM products ORDER BY name";
+
+	my $prod_ids = Bugzilla->dbh->selectcol_arrayref($query);
+	my $prodlist = Bugzilla::Product->new_from_list($prod_ids);
+
+    # Restrict the list of products to those being in the classification, if any.
+    if ($class_id) {
+        return [grep {$_->classification_id == $class_id} @{$prodlist}];
+    }
+    # If we come here, then we want all selectable products.
+    return $prodlist;
+}
 
 1;
