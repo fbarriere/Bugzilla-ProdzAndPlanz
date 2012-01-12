@@ -5,5 +5,9 @@ PREFIX  := ProdzAndPlanz
 
 release:
 	touch disabled
-	tar cvfz ../$(PACKAGE)-$(VERSION).tar.gz . --transform=s,./,$(PREFIX)/, --exclude .git --exclude .project --exclude .gitignore .
+	tar cvfz ../$(PACKAGE)-$(VERSION).tar.gz . --transform=s,./,$(PREFIX)/, \
+		--exclude .git \
+		--exclude .project \
+		--exclude .gitignore . \
+		--exclude Makefile
 	rm disabled
