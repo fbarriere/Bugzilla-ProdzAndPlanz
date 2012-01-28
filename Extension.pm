@@ -35,6 +35,32 @@ our $VERSION = '0.02';
 sub install_update_db {
     my ($self, $args) = @_;
 
+	my $field = new Bugzilla::Field({ name => "pap_buggroup_id" });
+	return if $field;
+
+	$field = Bugzilla::Field->create({
+    	name            => "pap_buggroup_id",
+    	description     => "Bug group ID (for multi-version bug groups)",
+		type            => FIELD_TYPE_BUG_ID,
+		enter_bug       => 0,
+		buglist         => 0,
+		custom          => 0,
+		is_mandatory    => 0,
+	});
+}
+
+sub object_columns {
+	my ($self, $args) = @_;
+	my ($class, $columns) = @$args{qw(class columns)};
+	if ($class->isa('Bugzilla::Bug')) {
+		push(@$columns, 'pap_buggroup_id');
+	}
+}
+
+sub bug_fields {
+	my ($self, $args) = @_;
+	my $fields = $args->{fields};
+	push(@$fields, 'pap_buggroup_id');
 }
 
 sub config_add_panels {
@@ -339,6 +365,13 @@ sub product_list {
     }
     
     $vars->{'products_table'} = PAP_tableize($llimit, values %{$productlist});
+}
+
+sub bug_version_dispatch {
+    my ($self, $args) = @_;
+
+    my $vars  = $args->{vars};
+    my $pname = Bugzilla->cgi->param('product');
 }
 
 __PACKAGE__->NAME;
