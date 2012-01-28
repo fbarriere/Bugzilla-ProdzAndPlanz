@@ -75,6 +75,8 @@ sub PAP_sort_milestones {
 sub PAP_limit_list {
 	my $max = shift;
 	
+	$max = ($max < scalar(@_)) ? $max : scalar(@_);
+	
 	return ($max) ? @_[0 .. $max -1] : @_;
 }
 
