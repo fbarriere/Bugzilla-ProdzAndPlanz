@@ -28,6 +28,7 @@ our @EXPORT = qw(
     PAP_limit_list
     PAP_tableize
     PAP_get_all_products
+    PAP_clone_bug
 );
 
 # This file can be loaded by your extension via 
@@ -120,6 +121,55 @@ sub PAP_get_all_products {
     }
     # If we come here, then we want all selectable products.
     return $prodlist;
+}
+
+sub PAP_clone_bug {
+	my ($bug, $version_string) = @_;
+	
+	warn "Clonning bug to version $version_string";
+	
+	my %bugvars;
+	
+	$bugvars{'product'}          = $bug->product;
+	$bugvars{'component'}        = $bug->component;
+	$bugvars{'priority'}         = $bug->priority;
+	$bugvars{'bug_severity'}     = $bug->bug_severity;
+	$bugvars{'rep_platform'}     = $bug->rep_platform;
+	$bugvars{'op_sys'}           = $bug->op_sys;
+	$bugvars{'target_milestone'} = $bug->target_milestone;
+
+	$bugvars{'short_desc'}       = $bug->short_desc;
+	$bugvars{'bug_file_loc'}     = $bug->bug_file_loc;
+	$bugvars{'keywords'}         = $bug->keywords;
+	$bugvars{'dependson'}        = join (", ", @{$bug->dependson});
+	$bugvars{'blocked'}          = join (", ", @{$bug->blocked});
+	$bugvars{'deadline'}         = $bug->deadline;
+	$bugvars{'estimated_time'}   = $bug->estimated_time;
+
+	if (defined $bug->cc) {
+		$bugvars{'cc'}           = join (", ", @{$bug->cc});
+	}
+    
+	my @enter_bug_fields = grep { $_->enter_bug } Bugzilla->active_custom_fields;
+    
+    foreach my $field (@enter_bug_fields) {
+        my $field_name = $field->name;
+        $bugvars{$field_name} = $bug->$field_name;
+    }
+
+	$bugvars{'version'} = $version_string;
+	
+	my $newbug = Bugzilla::Bug->create(\%bugvars);
+	
+	warn "New bug is: " . $newbug->bug_id;
+	
+	if($newbug) {
+		warn "Adding new bug to group.";
+		my $group = Bugzilla::Extension::ProdzAndPlanz::Groupmap->create({
+			'bug_id'    => $newbug->bug_id,
+			'leader_id' => $bug->bug_id,
+		});
+	}
 }
 
 1;

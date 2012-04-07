@@ -23,6 +23,8 @@ package Bugzilla::Extension::ProdzAndPlanz;
 use strict;
 use base qw(Bugzilla::Extension);
 
+use Bugzilla::Extension::ProdzAndPlanz::Groupmap;
+
 use Bugzilla::Constants;
 
 # This code for this is in ./extensions/ProdzAndPlanz/lib/Util.pm
@@ -32,36 +34,35 @@ our $VERSION = '0.02';
 
 # See the documentation of Bugzilla::Hook ("perldoc Bugzilla::Hook" 
 # in the bugzilla directory) for a list of all available hooks.
-sub install_update_db {
+
+sub db_schema_abstract_schema {
     my ($self, $args) = @_;
-
-	my $field = new Bugzilla::Field({ name => "pap_buggroup_id" });
-	return if $field;
-
-	$field = Bugzilla::Field->create({
-    	name            => "pap_buggroup_id",
-    	description     => "Bug group ID (for multi-version bug groups)",
-		type            => FIELD_TYPE_BUG_ID,
-		enter_bug       => 0,
-		buglist         => 0,
-		custom          => 0,
-		is_mandatory    => 0,
-	});
+    
+    $args->{'schema'}->{'pap_groupmap'} = {
+        FIELDS => [
+            group_id     => {TYPE => 'SMALLSERIAL', 
+            	             NOTNULL => 1,
+                             PRIMARYKEY => 1},
+            leader_id    => {TYPE => 'INT3', 
+            	             NOTNULL => 1,
+                             REFERENCES  => {TABLE  =>  'bugs',
+                                             COLUMN =>  'bug_id',
+                                             DELETE => 'CASCADE'}},
+            bug_id       => {TYPE => 'INT3', 
+            	             NOTNULL => 1,
+                             REFERENCES  => {TABLE  =>  'bugs',
+                                             COLUMN =>  'bug_id',
+                                             DELETE => 'CASCADE'}},
+        ],
+        INDEXES => [
+            pap_groupmap_group_idx  => ['group_id'],
+            pap_groupmap_leader_idx => ['leader_id'],
+            pap_groupmap_bug_idx    => ['bug_id'],
+        ],
+    };
 }
 
-sub object_columns {
-	my ($self, $args) = @_;
-	my ($class, $columns) = @$args{qw(class columns)};
-	if ($class->isa('Bugzilla::Bug')) {
-		push(@$columns, 'pap_buggroup_id');
-	}
-}
 
-sub bug_fields {
-	my ($self, $args) = @_;
-	my $fields = $args->{fields};
-	push(@$fields, 'pap_buggroup_id');
-}
 
 sub config_add_panels {
     my ($self, $args) = @_;
@@ -71,12 +72,15 @@ sub config_add_panels {
 }
 
 sub template_before_process {
-	my $self = shift;
-		
-	foreach my $args (@_) {
-		if($args->{'file'} eq "index.html.tmpl") {
-			$self->product_list($args);
-		}
+    my ($self, $args) = @_;
+    
+    my ($vars, $file, $context) = @$args{qw(vars file context)};
+	
+	if($file eq "index.html.tmpl") {
+		$self->product_list($args);
+	}
+	elsif($file eq "bug/show.html.tmpl") {
+		$self->versions_map($args);
 	}
 }
 
@@ -107,6 +111,9 @@ sub page_before_template {
 	}
 	elsif("$pageid" eq "prodzandplanz/product_versions.html") {
 		product_versions($self, $args);
+	}
+	elsif("$pageid" eq "prodzandplanz/bug_versions.html") {
+		versions_map($self, $args);
 	}
 }
 
@@ -332,6 +339,12 @@ sub product_search {
     }
 }
 
+#
+# Home page products listing
+#
+#   List the products per classification and return a hash of hash
+# used to build the drop down lists of the home page.
+#
 sub product_list {
     my ($self, $args) = @_;
     my $products;
@@ -367,11 +380,48 @@ sub product_list {
     $vars->{'products_table'} = PAP_tableize($llimit, values %{$productlist});
 }
 
-sub bug_version_dispatch {
+#
+# Build a map of the product versions with the bug corresponding to
+# the current bug, but for the given version.
+#
+sub versions_map {
     my ($self, $args) = @_;
 
-    my $vars  = $args->{vars};
-    my $pname = Bugzilla->cgi->param('product');
+    my $vars   = $args->{vars};
+	my $cgi    = Bugzilla->cgi;
+    my $bug_id = ($cgi->param('bug_id')) ? $cgi->param('bug_id') : $cgi->param('id');
+    
+    my $bug = new Bugzilla::Bug($bug_id) if $bug_id;
+    
+	if($bug) {
+		
+		$vars->{'short_desc'} = $bug->short_desc;
+		$vars->{'bug_id'}     = $bug_id;
+		
+		my $product = new Bugzilla::Product({ name => $bug->product });
+
+		my $groupmap = new Bugzilla::Extension::ProdzAndPlanz::Groupmap({ 'name' => $bug_id });
+		unless($groupmap) {
+			$groupmap = Bugzilla::Extension::ProdzAndPlanz::Groupmap->match({ 'leader_id' => $bug_id })->[0];
+		}
+		
+		$vars->{'versions_map'} = {};
+		foreach my $version (@{$product->versions}) {
+			$vars->{'versions_map'}->{$version->name} = 0;
+		}
+		
+		if($groupmap) {
+			foreach my $related_bug ( $groupmap->all_bugs_in_groupmap($groupmap->leader_id) ) {
+				$vars->{'versions_map'}->{$related_bug->version} = $related_bug->bug_id;
+			}
+		}
+		$vars->{'versions_map'}->{$bug->version} = $bug->bug_id;
+		
+    	my @versions = $cgi->param('version');
+    	foreach my $version (@versions) {
+    		PAP_clone_bug($bug, $version);
+    	}
+	}
 }
 
 __PACKAGE__->NAME;

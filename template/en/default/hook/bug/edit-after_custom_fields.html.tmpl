@@ -19,4 +19,23 @@
   #   Francois Barriere <francois@barriere-smithson.net>
   #%]
 
-<h2>Manage versions impacted</h2>
+<a href="page.cgi?id=prodzandplanz/bug_versions.html&bug_id=[% bug.id %]">Versions map</a>
+
+<table class="product_listing">
+	<tr>
+		<th>Also in this version</th>
+		<th>Not in this version</th>
+	</tr>
+	[% FOREACH v = versions_map.keys %]
+	<tr>
+		[% IF versions_map.$v %]
+			<td>[% v %] (<a href="show_bug.cgi?id=[% versions_map.$v %]">Bug [% versions_map.$v %]</a>)</td>
+			<td></td>
+		[% ELSE %]
+			<td></td>
+			<td>[% v %]</td>
+		[% END %]
+	</tr>
+	[% END %]
+</table>
+	

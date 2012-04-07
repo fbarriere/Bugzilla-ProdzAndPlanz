@@ -26,5 +26,30 @@
            subheader = subheader
  %]
 
+<h2 class="bz_alias_short_desc_container"><a href="show_bug.cgi?id=[% bug_id %]">Bug [% bug_id %]</a>: [% short_desc %]</h2>
+
+<form>
+	<input type="hidden" name="id" value="prodzandplanz/bug_versions.html"/>
+	<input type="hidden" name="bug_id" value="[% bug_id %]"/>
+	<table class="product_listing">
+		<tr>
+			<th>Also in this version</th>
+			<th>Not in this version</th>
+		</tr>
+		[% FOREACH v = versions_map.keys %]
+		<tr>
+			[% IF versions_map.$v %]
+				<td>[% v %] (<a href="show_bug.cgi?id=[% versions_map.$v %]">Bug [% versions_map.$v %]</a>)</td>
+				<td></td>
+			[% ELSE %]
+				<td></td>
+				<td><input type="checkbox" name="version" value="[% v %]" />[% v %]</td>
+			[% END %]
+		</tr>
+		[% END %]
+	</table>
+	<input type="submit" value="update"/>
+</form>
+
 [% PROCESS global/footer.html.tmpl %]
  
