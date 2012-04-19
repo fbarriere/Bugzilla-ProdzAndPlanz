@@ -394,29 +394,39 @@ sub versions_map {
     my $bug = new Bugzilla::Bug($bug_id) if $bug_id;
     
 	if($bug) {
-		
-		$vars->{'short_desc'} = $bug->short_desc;
-		$vars->{'bug_id'}     = $bug_id;
-		
 		my $product = new Bugzilla::Product({ name => $bug->product });
+
+		$vars->{'PAP'}->{'bug'} = $bug;
+		$vars->{'PAP'}->{'product'} = $product;
+		
+		$vars->{'product_versions'} = [ 
+			map { $_->name } PAP_filter_list(
+				$product->versions, [ Bugzilla->params->{'default_version'} ],
+			)
+		];
+
+
+		
+
 
 		my $groupmap = new Bugzilla::Extension::ProdzAndPlanz::Groupmap({ 'name' => $bug_id });
 		unless($groupmap) {
 			$groupmap = Bugzilla::Extension::ProdzAndPlanz::Groupmap->match({ 'leader_id' => $bug_id })->[0];
 		}
 		
-		$vars->{'versions_map'} = {};
-		foreach my $version (@{$product->versions}) {
-			$vars->{'versions_map'}->{$version->name} = 0;
-		}
-		
 		if($groupmap) {
-			foreach my $related_bug ( $groupmap->all_bugs_in_groupmap($groupmap->leader_id) ) {
+			$vars->{'bug_leader_id'} = $groupmap->leader_id;
+			
+			foreach my $related_bug ( @{$groupmap->all_bugs_in_groupmap($groupmap->leader_id)} ) {
 				$vars->{'versions_map'}->{$related_bug->version} = $related_bug->bug_id;
 			}
 		}
 		$vars->{'versions_map'}->{$bug->version} = $bug->bug_id;
 		
+		#
+		# If we have passed version params, we must duplicate the current
+		# bug for each version.
+		#
     	my @versions = $cgi->param('version');
     	foreach my $version (@versions) {
     		PAP_clone_bug($bug, $version);

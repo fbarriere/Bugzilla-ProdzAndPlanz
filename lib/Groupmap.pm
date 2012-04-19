@@ -55,6 +55,13 @@ sub group_id { return $_[0]->{'group_id'}; }
 sub leader_id { return $_[0]->{'leader_id'}; }
 sub bug_id { return $_[0]->{'bug_id'}; }
 
+#
+# Search all the bug in the group, return a list of
+# bugs (Bugzilla::Bug objects) that are related to
+# the given bug id.
+# Returns all the associations with the given bug ID
+# as the related bug or as the leader bug.
+#
 sub all_bugs_in_groupmap {
 	my ($self, $leader) = @_;
 	
@@ -74,7 +81,7 @@ sub all_bugs_in_groupmap {
 		}
 	}
 	
-	return @related_bugs;
+	return \@related_bugs;
 }
 
 ###############################

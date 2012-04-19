@@ -23,13 +23,16 @@
 
 <table class="product_listing">
 	<tr>
-		<th>Also in this version</th>
-		<th>Not in this version</th>
+		<th colspan=2>Same bug in other product versions</th>
 	</tr>
-	[% FOREACH v = versions_map.keys %]
+	<tr>
+		<th>Impacted versions</th>
+		<th>Not impacted</th>
+	</tr>
+	[% FOREACH v = product_versions %]
 	<tr>
 		[% IF versions_map.$v %]
-			<td>[% v %] (<a href="show_bug.cgi?id=[% versions_map.$v %]">Bug [% versions_map.$v %]</a>)</td>
+			<td><span [% IF bug_leader_id == versions_map.$v %]class="pap_bug_leader"[% END %]>[% v %]</span> (<a href="show_bug.cgi?id=[% versions_map.$v %]">Bug [% versions_map.$v %]</a>)</td>
 			<td></td>
 		[% ELSE %]
 			<td></td>

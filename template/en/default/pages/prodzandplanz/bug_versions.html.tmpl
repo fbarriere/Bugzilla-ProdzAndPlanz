@@ -26,20 +26,23 @@
            subheader = subheader
  %]
 
-<h2 class="bz_alias_short_desc_container"><a href="show_bug.cgi?id=[% bug_id %]">Bug [% bug_id %]</a>: [% short_desc %]</h2>
+<h2 class="bz_alias_short_desc_container"><a href="show_bug.cgi?id=[% PAP.bug.id %]">Bug [% PAP.bug.id %]</a>: [% PAP.bug.short_desc %]</h2>
 
 <form>
 	<input type="hidden" name="id" value="prodzandplanz/bug_versions.html"/>
-	<input type="hidden" name="bug_id" value="[% bug_id %]"/>
+	<input type="hidden" name="bug_id" value="[% PAP.bug.id %]"/>
 	<table class="product_listing">
 		<tr>
-			<th>Also in this version</th>
-			<th>Not in this version</th>
+			<th colspan=2>Same bug in other version of: [% PAP.product.name %]</th>
 		</tr>
-		[% FOREACH v = versions_map.keys %]
+		<tr>
+			<th>Versions with bugs</th>
+			<th>Versions without bug</th>
+		</tr>
+		[% FOREACH v = product_versions %]
 		<tr>
 			[% IF versions_map.$v %]
-				<td>[% v %] (<a href="show_bug.cgi?id=[% versions_map.$v %]">Bug [% versions_map.$v %]</a>)</td>
+				<td><span [% IF bug_leader_id == versions_map.$v %]class="pap_bug_leader"[% END %]>[% v %]</span> (<a href="show_bug.cgi?id=[% versions_map.$v %]">Bug [% versions_map.$v %]</a>)</td>
 				<td></td>
 			[% ELSE %]
 				<td></td>
