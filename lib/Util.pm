@@ -158,7 +158,23 @@ sub PAP_clone_bug {
     }
 
 	$bugvars{'version'} = $version_string;
-	
+
+	# We need to ensure that we respect the 'insider' status of
+	# the first comment, if it has one. Either way, make a note
+	# that this bug was cloned from another bug.
+	my $bug_desc = $bug->comments({ order => 'oldest_to_newest' })->[0];
+	my $isprivate = $bug_desc->is_private;
+
+	$bugvars{'comment'} = "";
+	$bugvars{'comment_is_private'} = 0;
+
+	if (!$isprivate || Bugzilla->user->is_insider) {
+		# We use "body" to avoid any format_comment text, which would be
+		# pointless to clone.
+		$bugvars{'comment'} = $bug_desc->body . "\n\nOriginal bug #" . $bug->bug_id . "\n";
+		$bugvars{'comment_is_private'} = $isprivate;
+	}
+
 	my $newbug = Bugzilla::Bug->create(\%bugvars);
 	
 	warn "New bug is: " . $newbug->bug_id;
