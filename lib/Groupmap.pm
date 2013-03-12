@@ -84,6 +84,15 @@ sub all_bugs_in_groupmap {
 	return \@related_bugs;
 }
 
+sub all_bugs_in_groupmap_as_string {
+	my ($self, $leader) = @_;
+	my (@bugslist);
+	
+	@bugslist = map { $_->bug_id } @{$self->all_bugs_in_groupmap($leader)};
+	
+	return join(",", @bugslist);
+}
+
 ###############################
 #####     Validators       ####
 ###############################
