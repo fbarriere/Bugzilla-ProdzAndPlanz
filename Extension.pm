@@ -420,6 +420,8 @@ sub versions_map {
 			foreach my $related_bug ( @{$groupmap->all_bugs_in_groupmap($groupmap->leader_id)} ) {
 				$vars->{'versions_map'}->{$related_bug->version} = $related_bug->bug_id;
 			}
+			
+			$vars->{'bugslist_as_string'} = $groupmap->all_bugs_in_groupmap_as_string($groupmap->leader_id);
 		}
 		$vars->{'versions_map'}->{$bug->version} = $bug->bug_id;
 		
