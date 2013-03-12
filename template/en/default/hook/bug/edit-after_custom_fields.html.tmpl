@@ -30,7 +30,10 @@
 	[% FOREACH v = product_versions %]
 	<tr>
 		[% IF versions_map.$v %]
-			<td><span [% IF bug_leader_id == versions_map.$v %]class="pap_bug_leader"[% END %]>[% v %]</span> (<a href="show_bug.cgi?id=[% versions_map.$v %]">Bug [% versions_map.$v %]</a>)</td>
+			<td>
+				<span [% IF bug_leader_id == versions_map.$v %]class="pap_bug_leader"[% END %]>[% v %]</span>
+				(<a href="show_bug.cgi?id=[% versions_map.$v %]">Bug [% versions_map.$v %]</a>)
+			</td>
 			<td></td>
 		[% ELSE %]
 			<td></td>
@@ -38,5 +41,11 @@
 		[% END %]
 	</tr>
 	[% END %]
+	<tr>
+		<th colspan=2>
+			<a href="buglist.cgi?bug_id=[% bugslist_as_string %]&bug_id_type=anyexact&tweak=1">Edit all bugs</a>
+		</th>
+	</tr>
 </table>
+
 	
